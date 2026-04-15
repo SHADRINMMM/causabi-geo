@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "causabi-geo"
+version = "0.1.2"
+description = "Fix how AI search engines see your website"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["seo", "ai", "chatgpt", "perplexity", "schema", "geo", "llm", "llms-txt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "httpx>=0.25",
+    "click>=8.0",
+    "rich>=13.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+ai = [
+    "google-generativeai>=0.8",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=4.0",
+    "hatch",
+]
+
+[project.scripts]
+geo-optimizer = "geo_optimizer.cli.main:cli"
+
+[project.urls]
+Homepage = "https://causabi.com"
+Repository = "https://github.com/SHADRINMMM/geo-optimizer"
+Documentation = "https://causabi.com/docs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["geo_optimizer"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
