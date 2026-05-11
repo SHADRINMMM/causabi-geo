@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "causabi-geo"
-version = "0.1.2"
+version = "0.2.0"
 description = "Fix how AI search engines see your website"
 readme = "README.md"
 license = {text = "MIT"}

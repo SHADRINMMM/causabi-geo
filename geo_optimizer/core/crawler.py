@@ -30,6 +30,7 @@ class CrawlResult:
     existing_schema: list = field(default_factory=list)
     body_text: str = ""
     pages: list = field(default_factory=list)
+    lang: str | None = None
     ok: bool = True
     error: str | None = None
 
@@ -64,6 +65,15 @@ async def crawl_site(url: str) -> CrawlResult:
     email = _extract(html, r"([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})")
     social = _extract_social(html)
 
+    # Language detection: HTML lang attr → Cyrillic ratio fallback
+    lang_raw = _extract(html, r'<html[^>]+lang=["\']([a-zA-Z]{2,8})["\']')
+    lang = lang_raw[:2].lower() if lang_raw else None
+    if not lang:
+        body_sample = re.sub(r"<[^>]+>", " ", html)[:3000]
+        cyrillic = sum(1 for c in body_sample if 'Ѐ' <= c <= 'ӿ')
+        if cyrillic / max(len(body_sample), 1) > 0.15:
+            lang = "ru"
+
     # Strip tags for body text
     body_text = re.sub(r"<[^>]+>", " ", html)
     body_text = re.sub(r"\s+", " ", body_text).strip()[:5000]
@@ -91,6 +101,7 @@ async def crawl_site(url: str) -> CrawlResult:
         existing_schema=schemas,
         body_text=body_text,
         pages=[page],
+        lang=lang,
     )
 
 
